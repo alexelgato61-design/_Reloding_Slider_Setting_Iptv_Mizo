@@ -28,13 +28,22 @@ export default function AdminLogin() {
         return
       }
 
-      const apiUrl = getApiUrl()
-      const res = await fetch(`${apiUrl}/auth/login`, {
+      // Use relative URL - Next.js proxy will forward to backend
+      const loginUrl = '/api/auth/login'
+      console.log('Attempting login to:', loginUrl)
+      console.log('Request body:', JSON.stringify({ email, password }))
+      
+      const res = await fetch(loginUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         credentials: 'include',
         body: JSON.stringify({ email, password })
       })
+      
+      console.log('Response received:', res.status, res.statusText)
 
       const data = await res.json()
 
@@ -44,7 +53,8 @@ export default function AdminLogin() {
 
       router.push('/admin/dashboard')
     } catch (err) {
-      setError(err.message)
+      console.error('Login error:', err)
+      setError(err.message || 'Failed to connect to server. Please check if the backend is running.')
     } finally {
       setLoading(false)
     }

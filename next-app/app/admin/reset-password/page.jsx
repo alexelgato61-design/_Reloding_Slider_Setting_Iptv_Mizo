@@ -1,17 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FaLock, FaCheckCircle, FaTimesCircle } from 'react-icons/fa'
 
 function getApiUrl() {
   if (typeof window !== 'undefined') {
-    return 'http://localhost:5000/api'
+    return 'https://api.365upstream.com'
   }
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+  return 'https://api.365upstream.com'
 }
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
@@ -586,5 +586,36 @@ export default function ResetPasswordPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+// Wrap in Suspense to handle useSearchParams
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(to bottom right, #1a1a1a, #2d2d2d, #000)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            display: 'inline-block',
+            width: '3rem',
+            height: '3rem',
+            border: '4px solid #4b5563',
+            borderTop: '4px solid #86ff00',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }}></div>
+          <p style={{ marginTop: '1rem', color: '#9ca3af' }}>Loading...</p>
+        </div>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   )
 }

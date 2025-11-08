@@ -14,9 +14,23 @@ const defaultFrontend = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 let corsOptions;
 if (!isProd) {
-  // In development, reflect all origins to avoid "Failed to fetch" during local testing
+  // In development, allow specific localhost ports with credentials
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001'
+  ];
+  
   corsOptions = {
-    origin: true,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS: ' + origin));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

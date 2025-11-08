@@ -1,15 +1,33 @@
-// Shared API base for frontend. Computes from current host to avoid localhost issues on other devices.
-export function getApiBase() {
-  if (typeof window !== 'undefined') {
-    return `${window.location.protocol}//${window.location.hostname}:5000`;
-  }
-  return process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:5000';
-}
-
+// Shared API URL configuration
+// In development: uses Next.js proxy (/api -> localhost:5000/api)
+// In production: uses direct API URL (https://api.365upstream.com/api)
 export function getApiUrl() {
-  return `${getApiBase()}/api`;
+  // Check if we're in browser (client-side)
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    
+    // In development (localhost), use relative URL - Next.js proxy handles it
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return '/api'; // No protocol/port - use Next.js proxy
+    }
+    
+    // In production, use the API subdomain with /api
+    return 'https://api.365upstream.com/api';
+  }
+  
+  // Server-side: use environment variable or fallback
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  
+  return 'https://api.365upstream.com/api';
 }
 
-// For convenience, export constants (but use functions in components for dynamic resolution)
-export const API_BASE = getApiBase();
+export function getApiBase() {
+  const apiUrl = getApiUrl();
+  return apiUrl.replace('/api', '');
+}
+
+// Legacy exports - kept for compatibility but components should use getApiUrl() function
 export const API_URL = getApiUrl();
+export const API_BASE = getApiBase();

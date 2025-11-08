@@ -3,17 +3,41 @@ import { Inter } from 'next/font/google'
 import GoogleAnalytics from './components/GoogleAnalytics'
 import FaviconUpdater from './components/FaviconUpdater'
 import ogImage from '../public/images/tv-1024x636-1-1.webp'
+import { getApiUrl } from './lib/config'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  metadataBase: new URL('https://iptv-access.com'),
-  title: {
-    default: 'IPTV ACCESS - Best IPTV Service Provider | 40,000+ Live Channels & VOD',
-    template: '%s | IPTV ACCESS'
-  },
-  description: 'IPTV ACCESS - Premium IPTV subscription with 40,000+ live TV channels, 54,000+ movies & series in HD/4K. Best IPTV service with anti-freeze technology, EPG guide, multi-device support. Free trial available. Get your IPTV subscription today!',
-  keywords: [
+async function getSettings() {
+  try {
+    const apiUrl = getApiUrl()
+    const res = await fetch(`${apiUrl}/settings`, {
+      cache: 'no-store'
+    })
+    if (!res.ok) throw new Error('Failed to fetch settings')
+    return await res.json()
+  } catch (error) {
+    console.error('Failed to load settings for metadata:', error)
+    return {
+      site_title: 'IPTV ACCESS - Best IPTV Service Provider | 40,000+ Live Channels & VOD',
+      site_description: 'IPTV ACCESS - Premium IPTV subscription with 40,000+ live TV channels, 54,000+ movies & series in HD/4K. Best IPTV service with anti-freeze technology, EPG guide, multi-device support. Free trial available. Get your IPTV subscription today!'
+    }
+  }
+}
+
+export async function generateMetadata() {
+  const settings = await getSettings()
+  
+  const title = settings.site_title || 'IPTV ACCESS - Best IPTV Service Provider | 40,000+ Live Channels & VOD'
+  const description = settings.site_description || 'IPTV ACCESS - Premium IPTV subscription with 40,000+ live TV channels, 54,000+ movies & series in HD/4K. Best IPTV service with anti-freeze technology, EPG guide, multi-device support. Free trial available. Get your IPTV subscription today!'
+  
+  return {
+    metadataBase: new URL('https://iptv-access.com'),
+    title: {
+      default: title,
+      template: `%s | ${title.split(' - ')[0] || 'IPTV ACCESS'}`
+    },
+    description: description,
+    keywords: [
     'IPTV',
     'IPTV service',
     'IPTV subscription',
@@ -107,8 +131,9 @@ export const metadata = {
   },
   category: 'technology',
   verification: {
-    google: 'your-google-verification-code',
-  },
+      google: 'your-google-verification-code',
+    },
+  }
 }
 
 export default function RootLayout({ children }) {

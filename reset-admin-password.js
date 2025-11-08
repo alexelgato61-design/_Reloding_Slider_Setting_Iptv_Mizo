@@ -1,4 +1,4 @@
-const db = require('./config/database');
+const db = require('./backend/config/database');
 const bcrypt = require('bcryptjs');
 
 const resetPassword = async (email, newPassword) => {
@@ -18,9 +18,6 @@ const resetPassword = async (email, newPassword) => {
     } else {
       console.log(`✅ Password updated successfully for ${email}`);
       console.log(`New password: ${newPassword}`);
-      console.log(`\nYou can now login with:`);
-      console.log(`Email: ${email}`);
-      console.log(`Password: ${newPassword}`);
     }
   } catch(e) {
     console.error('❌ Error:', e.message);
@@ -32,10 +29,7 @@ const resetPassword = async (email, newPassword) => {
 const email = process.argv[2] || 'ayoub-k10@hotmail.com';
 const password = process.argv[3] || 'admin123';
 
-console.log(`\n========================================`);
-console.log(`  Resetting Admin Password`);
-console.log(`========================================\n`);
-console.log(`Email: ${email}`);
-console.log(`New Password: ${password}\n`);
+console.log(`\nResetting password for: ${email}`);
+console.log(`New password will be: ${password}\n`);
 
 resetPassword(email, password);

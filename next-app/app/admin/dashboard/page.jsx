@@ -38,6 +38,8 @@ export default function AdminDashboard() {
   const [heroHeading, setHeroHeading] = useState('')
   const [heroParagraph, setHeroParagraph] = useState('')
   const [supportedDevicesParagraph, setSupportedDevicesParagraph] = useState('')
+  const [siteTitle, setSiteTitle] = useState('')
+  const [siteDescription, setSiteDescription] = useState('')
   
   // Account settings state
   const [currentEmail, setCurrentEmail] = useState('')
@@ -163,6 +165,8 @@ export default function AdminDashboard() {
       setSupportedDevicesParagraph(data.supported_devices_paragraph || '')
       setGoogleAnalyticsId(data.google_analytics_id || '')
       setGoogleMeasurementId(data.google_analytics_measurement_id || '')
+      setSiteTitle(data.site_title || '')
+      setSiteDescription(data.site_description || '')
     } catch (error) {
       console.error('Failed to load settings:', error)
     }
@@ -348,7 +352,9 @@ export default function AdminDashboard() {
           hero_paragraph: heroParagraph,
           supported_devices_paragraph: supportedDevicesParagraph,
           google_analytics_id: googleAnalyticsId,
-          google_analytics_measurement_id: googleMeasurementId
+          google_analytics_measurement_id: googleMeasurementId,
+          site_title: siteTitle,
+          site_description: siteDescription
         })
       })
 
@@ -842,6 +848,10 @@ export default function AdminDashboard() {
             setHeroParagraph={setHeroParagraph}
             supportedDevicesParagraph={supportedDevicesParagraph}
             setSupportedDevicesParagraph={setSupportedDevicesParagraph}
+            siteTitle={siteTitle}
+            setSiteTitle={setSiteTitle}
+            siteDescription={siteDescription}
+            setSiteDescription={setSiteDescription}
             saveSettings={saveSettings}
             saving={saving}
           />
@@ -1248,7 +1258,7 @@ function AccountSection({ currentEmail, newEmail, setNewEmail, emailPassword, se
 }
 
 // Site Settings Section Component  
-function SiteSettingsSection({ contactEmail, setContactEmail, whatsappNumber, setWhatsappNumber, useLogoImage, setUseLogoImage, logoUrl, handleLogoUpload, logoWidth, setLogoWidth, logoText, setLogoText, faviconUrl, handleFaviconUpload, heroHeading, setHeroHeading, heroParagraph, setHeroParagraph, supportedDevicesParagraph, setSupportedDevicesParagraph, saveSettings, saving }) {
+function SiteSettingsSection({ contactEmail, setContactEmail, whatsappNumber, setWhatsappNumber, useLogoImage, setUseLogoImage, logoUrl, handleLogoUpload, logoWidth, setLogoWidth, logoText, setLogoText, faviconUrl, handleFaviconUpload, heroHeading, setHeroHeading, heroParagraph, setHeroParagraph, supportedDevicesParagraph, setSupportedDevicesParagraph, siteTitle, setSiteTitle, siteDescription, setSiteDescription, saveSettings, saving }) {
   return (
     <div>
       <h1 style={{ margin: '0 0 32px 0', color: '#fff', fontSize: '32px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -1531,6 +1541,63 @@ function SiteSettingsSection({ contactEmail, setContactEmail, whatsappNumber, se
                 resize: 'vertical'
               }}
             />
+          </div>
+        </div>
+
+        {/* SEO Settings Section */}
+        <div style={{ marginBottom: '32px', paddingTop: '24px', borderTop: '1px solid #2a2a2a' }}>
+          <h3 style={{ margin: '0 0 24px 0', color: '#fff', fontSize: '20px', fontWeight: '700' }}>
+            SEO Settings
+          </h3>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', color: '#ddd', marginBottom: '10px', fontSize: '14px', fontWeight: '500' }}>
+              Website Title
+            </label>
+            <input
+              type="text"
+              value={siteTitle}
+              onChange={(e) => setSiteTitle(e.target.value)}
+              placeholder="IPTV ACCESS - Best IPTV Service Provider"
+              maxLength={255}
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '8px',
+                border: '1px solid #3a3a3a',
+                background: '#0f0f0f',
+                color: '#fff',
+                fontSize: '15px'
+              }}
+            />
+            <p style={{ margin: '8px 0 0 0', fontSize: '12px', color: '#888' }}>
+              Appears in browser tab and search results (Max 255 characters)
+            </p>
+          </div>
+          
+          <div>
+            <label style={{ display: 'block', color: '#ddd', marginBottom: '10px', fontSize: '14px', fontWeight: '500' }}>
+              Website Description
+            </label>
+            <textarea
+              value={siteDescription}
+              onChange={(e) => setSiteDescription(e.target.value)}
+              placeholder="Get the best IPTV subscription with access to thousands of channels, movies, and sports events. Enjoy crystal-clear HD streaming on any device."
+              rows={4}
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '8px',
+                border: '1px solid #3a3a3a',
+                background: '#0f0f0f',
+                color: '#fff',
+                fontSize: '15px',
+                fontFamily: 'inherit',
+                resize: 'vertical'
+              }}
+            />
+            <p style={{ margin: '8px 0 0 0', fontSize: '12px', color: '#888' }}>
+              Shown in search engine results and social media previews
+            </p>
           </div>
         </div>
 

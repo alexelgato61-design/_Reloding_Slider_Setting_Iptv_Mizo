@@ -4,7 +4,7 @@ export default async function sitemap() {
   // Fetch dynamic plans for sitemap
   let plans = []
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
     const response = await fetch(`${apiUrl}/plans`, { 
       next: { revalidate: 3600 },
       cache: 'no-store'

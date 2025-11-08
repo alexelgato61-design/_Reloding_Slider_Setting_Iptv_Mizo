@@ -21,7 +21,9 @@ router.get('/', async (req, res) => {
         hero_paragraph: 'Enjoy premium TV with Titan IPTV. Access a wide range of channels and exclusive content, with over 40,000 channels and more than 54,000 VOD.',
         supported_devices_paragraph: 'Watch your favorite content on any device, anywhere. Our IPTV service is compatible with all major platforms including Smart TVs, Android, iOS, Windows, Mac, Fire TV Stick, and more. Enjoy seamless streaming across multiple devices with just one subscription.',
         google_analytics_id: null,
-        google_analytics_measurement_id: null
+        google_analytics_measurement_id: null,
+        site_title: 'IPTV ACCESS - Best IPTV Service Provider',
+        site_description: 'Get the best IPTV subscription with IPTV ACCESS. Stream 40,000+ live TV channels, 54,000+ movies & series in HD/4K.'
       });
     }
 
@@ -47,7 +49,9 @@ router.put('/', authMiddleware, async (req, res) => {
       hero_paragraph,
       supported_devices_paragraph,
       google_analytics_id,
-      google_analytics_measurement_id
+      google_analytics_measurement_id,
+      site_title,
+      site_description
     } = req.body;
 
     const updateFields = [];
@@ -100,6 +104,14 @@ router.put('/', authMiddleware, async (req, res) => {
     if (google_analytics_measurement_id !== undefined) {
       updateFields.push('google_analytics_measurement_id = ?');
       values.push(google_analytics_measurement_id);
+    }
+    if (site_title !== undefined) {
+      updateFields.push('site_title = ?');
+      values.push(site_title);
+    }
+    if (site_description !== undefined) {
+      updateFields.push('site_description = ?');
+      values.push(site_description);
     }
 
     if (updateFields.length === 0) {
